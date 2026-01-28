@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Location {
+  id          Int      @id @default(autoincrement())
+  name        String
+  type        String   // donation, repair, recycling, disposal
+  category    String
+  address     String
+  lat         Float
+  lng         Float
+  phone       String?
+  website     String?
+  hours       String?
+  accepts     String[] // PostgreSQL array
+  description String?
+  isPending   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([type])
+  @@index([category])
+  @@index([isPending])
+}
+
+model Submission {
+  id             String    @id @default(uuid())
+  status         String    @default("pending") // pending, approved, rejected
+  submitterEmail String?
+  submittedAt    DateTime  @default(now())
+  processedAt    DateTime?
+  locationName   String
+  locationType   String
+  locationData   Json      // Store full location object
+
+  @@index([status])
+}
+
+model Analytics {
+  id        Int      @id @default(autoincrement())
+  type      String   // search, view, filter, category
+  data      String   // query, locationId, filterName, etc.
+  count     Int      @default(1)
+  createdAt DateTime @default(now())
+  date      String   // YYYY-MM-DD for daily grouping
+
+  @@unique([type, data, date])
+  @@index([type])
+  @@index([date])
+}

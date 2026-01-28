@@ -29,6 +29,13 @@
                         </svg>
                         <span>Suggest a Location</span>
                     </button>
+                    <button class="info-btn" onclick="openAboutPanel()" title="About / How It Works">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                    </button>
                     <button class="admin-btn" onclick="openAdminLogin()" title="Admin">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"></path>
@@ -153,6 +160,91 @@
     </div>
 
     <main class="container">
+        <!-- Item Helper Accordion -->
+        <section class="item-helper">
+            <button class="item-helper-toggle" id="itemHelperToggle" aria-expanded="false" aria-controls="itemHelperBody">
+                <span class="item-helper-heading">
+                    <span class="item-helper-icon">🤔</span>
+                    Not Sure Where Your Item Goes?
+                </span>
+                <svg class="item-helper-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
+            <div class="item-helper-body" id="itemHelperBody">
+                <div class="item-helper-columns">
+                    <!-- Decision Tree -->
+                    <div class="decision-tree">
+                        <h4 class="decision-tree-title">Follow the Decision Tree</h4>
+                        <div class="decision-step">
+                            <p class="decision-question">Is your item in good working condition?</p>
+                            <div class="decision-answers">
+                                <button class="decision-answer answer-yes" onclick="applyHelperFilter('donation')">
+                                    <span class="answer-label">YES</span>
+                                    <span class="answer-text">Consider <strong>Donation</strong> to give it a second life</span>
+                                </button>
+                                <div class="answer-no-continue">NO &rarr; Continue...</div>
+                            </div>
+                        </div>
+                        <div class="decision-step">
+                            <p class="decision-question">Can it be fixed?</p>
+                            <div class="decision-answers">
+                                <button class="decision-answer answer-yes" onclick="applyHelperFilter('repair')">
+                                    <span class="answer-label">YES</span>
+                                    <span class="answer-text">Try <strong>Repair</strong> to keep it out of the landfill</span>
+                                </button>
+                                <div class="answer-no-continue">NO &rarr; Continue...</div>
+                            </div>
+                        </div>
+                        <div class="decision-step">
+                            <p class="decision-question">Is it made of recyclable materials?</p>
+                            <div class="decision-answers">
+                                <button class="decision-answer answer-yes" onclick="applyHelperFilter('recycling')">
+                                    <span class="answer-label">YES</span>
+                                    <span class="answer-text">Use <strong>Recycling</strong> to turn it into something new</span>
+                                </button>
+                                <button class="decision-answer answer-final" onclick="applyHelperFilter('disposal')">
+                                    <span class="answer-label">NO</span>
+                                    <span class="answer-text">Use <strong>Disposal</strong> for proper handling</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Quick Links -->
+                    <div class="quick-links">
+                        <h4 class="quick-links-title">Common Items</h4>
+                        <div class="quick-links-grid">
+                            <button class="quick-link" onclick="applyHelperSearch('electronics')">
+                                <span class="quick-link-emoji">💻</span>
+                                <span class="quick-link-name">Old Electronics</span>
+                                <span class="quick-link-types"><span class="ql-tag ql-donation">Donation</span><span class="ql-tag ql-recycling">Recycling</span></span>
+                            </button>
+                            <button class="quick-link" onclick="applyHelperSearch('furniture')">
+                                <span class="quick-link-emoji">🪑</span>
+                                <span class="quick-link-name">Broken Furniture</span>
+                                <span class="quick-link-types"><span class="ql-tag ql-repair">Repair</span><span class="ql-tag ql-disposal">Disposal</span></span>
+                            </button>
+                            <button class="quick-link" onclick="applyHelperSearch('clothing')">
+                                <span class="quick-link-emoji">👕</span>
+                                <span class="quick-link-name">Clothes & Textiles</span>
+                                <span class="quick-link-types"><span class="ql-tag ql-donation">Donation</span></span>
+                            </button>
+                            <button class="quick-link" onclick="applyHelperSearch('batteries')">
+                                <span class="quick-link-emoji">🔋</span>
+                                <span class="quick-link-name">Batteries & Chemicals</span>
+                                <span class="quick-link-types"><span class="ql-tag ql-disposal">Disposal</span></span>
+                            </button>
+                            <button class="quick-link" onclick="applyHelperSearch('building materials')">
+                                <span class="quick-link-emoji">🏗️</span>
+                                <span class="quick-link-name">Building Materials</span>
+                                <span class="quick-link-types"><span class="ql-tag ql-donation">Donation</span></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Search Section -->
         <section class="search-section">
             <div class="search-box">
@@ -163,6 +255,43 @@
                     autocomplete="off"
                 >
                 <button id="searchBtn">Search</button>
+            </div>
+        </section>
+
+        <!-- Popular Items -->
+        <section class="popular-items-section">
+            <p class="popular-items-label">Looking for where to take:</p>
+            <div class="popular-items-track">
+                <button class="popular-chip popular-chip-electronics" onclick="popularItemSearch('electronics', 'Electronics')">
+                    <span class="popular-chip-emoji">💻</span> Electronics
+                </button>
+                <button class="popular-chip popular-chip-furniture" onclick="popularItemSearch('furniture', 'Furniture')">
+                    <span class="popular-chip-emoji">🪑</span> Furniture
+                </button>
+                <button class="popular-chip popular-chip-clothing" onclick="popularItemSearch('clothing', 'Clothing &amp; Textiles')">
+                    <span class="popular-chip-emoji">👕</span> Clothing &amp; Textiles
+                </button>
+                <button class="popular-chip popular-chip-paint" onclick="popularItemSearch('paint', 'Paint &amp; Chemicals')">
+                    <span class="popular-chip-emoji">🎨</span> Paint &amp; Chemicals
+                </button>
+                <button class="popular-chip popular-chip-batteries" onclick="popularItemSearch('batteries', 'Batteries')">
+                    <span class="popular-chip-emoji">🔋</span> Batteries
+                </button>
+                <button class="popular-chip popular-chip-appliances" onclick="popularItemSearch('appliances', 'Appliances')">
+                    <span class="popular-chip-emoji">🔌</span> Appliances
+                </button>
+                <button class="popular-chip popular-chip-books" onclick="popularItemSearch('books', 'Books &amp; Media')">
+                    <span class="popular-chip-emoji">📚</span> Books &amp; Media
+                </button>
+                <button class="popular-chip popular-chip-bikes" onclick="popularItemSearch('bicycles', 'Bikes &amp; Parts')">
+                    <span class="popular-chip-emoji">🚲</span> Bikes &amp; Parts
+                </button>
+                <button class="popular-chip popular-chip-building" onclick="popularItemSearch('building materials', 'Building Materials')">
+                    <span class="popular-chip-emoji">🏗️</span> Building Materials
+                </button>
+                <button class="popular-chip popular-chip-compost" onclick="popularItemSearch('food scraps', 'Food Waste')">
+                    <span class="popular-chip-emoji">🥬</span> Food Waste
+                </button>
             </div>
         </section>
 
@@ -182,10 +311,38 @@
             <h3>Filter by Type:</h3>
             <div class="filter-buttons">
                 <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="donation">Donation</button>
-                <button class="filter-btn" data-filter="repair">Repair</button>
-                <button class="filter-btn" data-filter="recycling">Recycling</button>
-                <button class="filter-btn" data-filter="disposal">Disposal</button>
+                <span class="filter-tooltip-wrapper">
+                    <button class="filter-btn" data-filter="donation">Donation <span class="filter-info-icon">ℹ️</span></button>
+                    <div class="filter-tooltip">
+                        <span class="filter-tooltip-title">Donation Centers</span>
+                        <strong>Give away items in good condition for reuse</strong>
+                        <span class="filter-tooltip-examples">Furniture, clothing, electronics, books, toys, housewares</span>
+                    </div>
+                </span>
+                <span class="filter-tooltip-wrapper">
+                    <button class="filter-btn" data-filter="repair">Repair <span class="filter-info-icon">ℹ️</span></button>
+                    <div class="filter-tooltip">
+                        <span class="filter-tooltip-title">Repair Services</span>
+                        <strong>Fix broken items instead of throwing them away</strong>
+                        <span class="filter-tooltip-examples">Electronics, bikes, appliances, clothing, furniture</span>
+                    </div>
+                </span>
+                <span class="filter-tooltip-wrapper">
+                    <button class="filter-btn" data-filter="recycling">Recycling <span class="filter-info-icon">ℹ️</span></button>
+                    <div class="filter-tooltip">
+                        <span class="filter-tooltip-title">Recycling Facilities</span>
+                        <strong>Materials processed into new products</strong>
+                        <span class="filter-tooltip-examples">Paper, cardboard, electronics, metals, batteries, glass</span>
+                    </div>
+                </span>
+                <span class="filter-tooltip-wrapper">
+                    <button class="filter-btn" data-filter="disposal">Disposal <span class="filter-info-icon">ℹ️</span></button>
+                    <div class="filter-tooltip">
+                        <span class="filter-tooltip-title">Proper Disposal</span>
+                        <strong>Safe disposal of hazardous or special waste</strong>
+                        <span class="filter-tooltip-examples">Paint, chemicals, batteries, motor oil, medications</span>
+                    </div>
+                </span>
                 <button class="filter-btn filter-btn-favorites" data-filter="favorites">Favorites</button>
                 <button class="clear-favorites-btn" onclick="clearAllFavorites()" title="Clear all favorites">Clear Favorites</button>
             </div>
@@ -345,6 +502,163 @@
             <p class="disclaimer">Location data is community-sourced. Please verify hours and accepted items before visiting.</p>
         </div>
     </footer>
+
+    <!-- About / How It Works Panel -->
+    <div class="about-overlay" id="aboutOverlay" onclick="closeAboutPanel()"></div>
+    <aside class="about-panel" id="aboutPanel">
+        <div class="about-panel-header">
+            <h2>About Portland Reuse Hub</h2>
+            <button class="about-close" onclick="closeAboutPanel()" aria-label="Close">&times;</button>
+        </div>
+        <div class="about-panel-body">
+
+            <!-- What Is -->
+            <section class="about-section">
+                <h3>🌱 What Is Portland Reuse Hub?</h3>
+                <p>We help Portland residents find the right place for any item they want to donate, repair, recycle, or properly dispose of&mdash;reducing waste and supporting our circular economy.</p>
+                <p>Our directory currently lists <strong id="aboutLocationCount">30</strong> verified locations across the Portland metro area, from nonprofits like <strong>Free Geek</strong> and the <strong>ReBuilding Center</strong> to city facilities like <strong>Metro South Transfer Station</strong>.</p>
+            </section>
+
+            <!-- How To Use -->
+            <section class="about-section">
+                <h3>📖 How to Use This Site</h3>
+                <ol class="about-steps">
+                    <li>
+                        <strong>Search for your item</strong> in the search bar&mdash;try "laptop", "couch", or "paint".
+                    </li>
+                    <li>
+                        <strong>Browse by category</strong> using the Popular Items chips or Category filters below the search bar.
+                    </li>
+                    <li>
+                        <strong>Filter by type</strong>&mdash;Donation, Repair, Recycling, or Disposal&mdash;to narrow your results.
+                    </li>
+                    <li>
+                        <strong>Explore the map</strong> to find locations near you. Enable location access to see distances.
+                    </li>
+                    <li>
+                        <strong>Click any location</strong> to see hours, accepted items, and get driving directions.
+                    </li>
+                </ol>
+            </section>
+
+            <!-- Categories -->
+            <section class="about-section">
+                <h3>📂 Understanding the Categories</h3>
+                <div class="about-categories">
+                    <div class="about-cat-card about-cat-donation">
+                        <div class="about-cat-header">
+                            <span class="about-cat-dot" style="background:#2d6a4f"></span>
+                            <strong>Donation</strong>
+                        </div>
+                        <p>Give away usable items in good condition so they get a second life.</p>
+                        <p class="about-cat-examples"><strong>Examples:</strong> Furniture, clothing, electronics, books, toys, building materials</p>
+                        <p class="about-cat-places">📍 <em>Goodwill, Habitat ReStore, SCRAP PDX, Community Cycling Center</em></p>
+                    </div>
+                    <div class="about-cat-card about-cat-repair">
+                        <div class="about-cat-header">
+                            <span class="about-cat-dot" style="background:#1976d2"></span>
+                            <strong>Repair</strong>
+                        </div>
+                        <p>Fix broken items instead of throwing them away. Many events are free!</p>
+                        <p class="about-cat-examples"><strong>Examples:</strong> Electronics, bikes, appliances, clothing, furniture</p>
+                        <p class="about-cat-places">📍 <em>Repair PDX, Portland Repair Collective</em></p>
+                    </div>
+                    <div class="about-cat-card about-cat-recycling">
+                        <div class="about-cat-header">
+                            <span class="about-cat-dot" style="background:#f57c00"></span>
+                            <strong>Recycling</strong>
+                        </div>
+                        <p>Process materials to be made into new products, keeping them out of landfills.</p>
+                        <p class="about-cat-examples"><strong>Examples:</strong> Paper, cardboard, electronics, metals, batteries, styrofoam</p>
+                        <p class="about-cat-places">📍 <em>Far West Fibers, Next Step Recycling, The Bin</em></p>
+                    </div>
+                    <div class="about-cat-card about-cat-disposal">
+                        <div class="about-cat-header">
+                            <span class="about-cat-dot" style="background:#c62828"></span>
+                            <strong>Disposal</strong>
+                        </div>
+                        <p>Proper disposal for hazardous or special waste that can't be donated or recycled.</p>
+                        <p class="about-cat-examples"><strong>Examples:</strong> Paint, chemicals, batteries, motor oil, medications</p>
+                        <p class="about-cat-places">📍 <em>Metro South Transfer Station, Portland Composts!</em></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Why Reuse Matters -->
+            <section class="about-section">
+                <h3>♻️ Why Reuse Matters</h3>
+                <div class="about-stats">
+                    <div class="about-stat">
+                        <span class="about-stat-number">292M</span>
+                        <span class="about-stat-label">tons of waste generated in the US each year</span>
+                    </div>
+                    <div class="about-stat">
+                        <span class="about-stat-number">66%</span>
+                        <span class="about-stat-label">of discarded items could be reused or recycled</span>
+                    </div>
+                    <div class="about-stat">
+                        <span class="about-stat-number">50%</span>
+                        <span class="about-stat-label">Portland&rsquo;s waste recovery goal by 2030</span>
+                    </div>
+                </div>
+                <p>Every item diverted from the landfill saves energy, reduces greenhouse gases, and supports local jobs. By choosing reuse first, you&rsquo;re helping build a more sustainable Portland.</p>
+            </section>
+
+            <!-- Contribute -->
+            <section class="about-section">
+                <h3>🤝 Contribute</h3>
+                <p>Know a location we&rsquo;re missing? Our directory grows with community help.</p>
+                <button class="about-suggest-btn" onclick="closeAboutPanel(); setTimeout(openSuggestionModal, 300);">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="16"></line>
+                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                    </svg>
+                    Suggest a Location
+                </button>
+            </section>
+
+            <!-- Contact -->
+            <section class="about-section about-section-last">
+                <h3>📬 Contact</h3>
+                <p>Questions, feedback, or partnership ideas? Reach out:</p>
+                <ul class="about-contact-list">
+                    <li>📧 <a href="mailto:hello@portlandreusehub.org">hello@portlandreusehub.org</a></li>
+                    <li>🐙 <a href="https://github.com/portlandreusehub" target="_blank" rel="noopener">GitHub</a></li>
+                </ul>
+            </section>
+        </div>
+    </aside>
+
+    <!-- Welcome Modal -->
+    <div class="modal-overlay" id="welcomeModal">
+        <div class="modal modal-small welcome-modal">
+            <div class="welcome-modal-content">
+                <div class="welcome-icon">🌱</div>
+                <h2>Welcome to Portland Reuse Hub!</h2>
+                <p class="welcome-desc">Find the right place for any item you want to donate, repair, or recycle in Portland.</p>
+                <ul class="welcome-tips">
+                    <li>
+                        <span class="tip-icon">🔍</span>
+                        <span>Search for your item (e.g., "laptop", "couch", "paint")</span>
+                    </li>
+                    <li>
+                        <span class="tip-icon">🎯</span>
+                        <span>Filter by type: Donation, Repair, Recycling, or Disposal</span>
+                    </li>
+                    <li>
+                        <span class="tip-icon">📍</span>
+                        <span>Click any location to see details and get directions</span>
+                    </li>
+                </ul>
+                <label class="welcome-checkbox">
+                    <input type="checkbox" id="welcomeDontShow" checked>
+                    <span>Don't show this again</span>
+                </label>
+                <button class="welcome-btn" onclick="dismissWelcomeModal()">Get Started</button>
+            </div>
+        </div>
+    </div>
 
     <script src="app.js"></script>
 </body>

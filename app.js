@@ -1032,7 +1032,145 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Setup modal event listeners
     setupModalListeners();
+
+    // Initialize item helper accordion
+    initItemHelper();
+
+    // Show welcome modal on first visit
+    showWelcomeModalIfFirstVisit();
 });
+
+// Welcome modal logic
+function showWelcomeModalIfFirstVisit() {
+    if (localStorage.getItem('hasVisited')) return;
+
+    const modal = document.getElementById('welcomeModal');
+    if (!modal) return;
+
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+
+    // Close on backdrop click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            dismissWelcomeModal();
+        }
+    });
+}
+
+function dismissWelcomeModal() {
+    const modal = document.getElementById('welcomeModal');
+    if (modal) {
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    // Always mark visited; checkbox controls whether it persists
+    const dontShow = document.getElementById('welcomeDontShow');
+    if (dontShow && dontShow.checked) {
+        localStorage.setItem('hasVisited', 'true');
+    }
+}
+
+// About / How It Works panel
+function openAboutPanel() {
+    document.getElementById('aboutOverlay').classList.add('open');
+    document.getElementById('aboutPanel').classList.add('open');
+    document.body.style.overflow = 'hidden';
+
+    // Update live location count
+    const countEl = document.getElementById('aboutLocationCount');
+    if (countEl && locations.length > 0) {
+        countEl.textContent = locations.length;
+    }
+}
+
+function closeAboutPanel() {
+    document.getElementById('aboutOverlay').classList.remove('open');
+    document.getElementById('aboutPanel').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+// Item Helper accordion toggle
+function initItemHelper() {
+    const toggle = document.getElementById('itemHelperToggle');
+    const body = document.getElementById('itemHelperBody');
+    if (!toggle || !body) return;
+
+    toggle.addEventListener('click', () => {
+        const expanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', String(!expanded));
+        body.classList.toggle('open', !expanded);
+    });
+}
+
+// Apply a filter from the helper decision tree
+function applyHelperFilter(type) {
+    // Click the corresponding filter button
+    const btn = document.querySelector(`.filter-btn[data-filter="${type}"]`);
+    if (btn) btn.click();
+
+    // Collapse the helper
+    const toggle = document.getElementById('itemHelperToggle');
+    const body = document.getElementById('itemHelperBody');
+    if (toggle && body) {
+        toggle.setAttribute('aria-expanded', 'false');
+        body.classList.remove('open');
+    }
+
+    // Scroll to results
+    const resultsSection = document.getElementById('contentGrid') || document.querySelector('.search-section');
+    if (resultsSection) {
+        resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+// Apply a search from the helper quick links
+function applyHelperSearch(term) {
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.value = term;
+        searchTerm = term.toLowerCase();
+        filterAndDisplayLocations();
+    }
+
+    // Collapse the helper
+    const toggle = document.getElementById('itemHelperToggle');
+    const body = document.getElementById('itemHelperBody');
+    if (toggle && body) {
+        toggle.setAttribute('aria-expanded', 'false');
+        body.classList.remove('open');
+    }
+
+    // Scroll to results
+    const resultsSection = document.getElementById('contentGrid') || document.querySelector('.search-section');
+    if (resultsSection) {
+        resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+// Popular item chip search
+function popularItemSearch(term, label) {
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.value = term;
+        searchTerm = term.toLowerCase();
+        filterAndDisplayLocations();
+    }
+
+    // Track in analytics
+    trackSearch(term, 0);
+    apiRequest('/api/analytics/track', {
+        method: 'POST',
+        body: JSON.stringify({ type: 'category', data: label.toLowerCase() })
+    }).catch(() => {});
+
+    // Scroll to results
+    const resultsSection = document.getElementById('contentGrid') || document.querySelector('.search-section');
+    if (resultsSection) {
+        resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
 
 // Load location data from API
 async function loadLocations() {
@@ -1537,6 +1675,35 @@ function resetMapView() {
 
 // Setup event listeners
 function setupEventListeners() {
+    // Filter tooltip tap support for mobile
+    document.querySelectorAll('.filter-tooltip-wrapper').forEach(wrapper => {
+        wrapper.addEventListener('click', (e) => {
+            // Only handle tap-to-toggle on touch devices and only on the info icon
+            if (!('ontouchstart' in window)) return;
+            const icon = e.target.closest('.filter-info-icon');
+            if (!icon) return;
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Close all other tooltips
+            document.querySelectorAll('.filter-tooltip-wrapper.tooltip-active').forEach(w => {
+                if (w !== wrapper) w.classList.remove('tooltip-active');
+            });
+
+            wrapper.classList.toggle('tooltip-active');
+        });
+    });
+
+    // Close tooltips when tapping elsewhere on mobile
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.filter-tooltip-wrapper')) {
+            document.querySelectorAll('.filter-tooltip-wrapper.tooltip-active').forEach(w => {
+                w.classList.remove('tooltip-active');
+            });
+        }
+    });
+
     // Search functionality
     const searchInput = document.getElementById('searchInput');
     const searchBtn = document.getElementById('searchBtn');
@@ -3629,6 +3796,10 @@ function setupModalListeners() {
             }
             if (adminPanelModal && adminPanelModal.classList.contains('open')) {
                 closeAdminPanel();
+            }
+            const aboutPanel = document.getElementById('aboutPanel');
+            if (aboutPanel && aboutPanel.classList.contains('open')) {
+                closeAboutPanel();
             }
         }
     });

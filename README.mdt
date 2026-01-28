@@ -1,0 +1,63 @@
+# 🌱 Po
+
+rtland Reuse Hub
+
+Full-stack web platform helping Portland residents find reuse, repair, and recycling resources to reduce waste through circular economy principles.
+
+**Live Demo:** [Coming soon - deploying to Render]  
+**GitHub:** https://github.com/hickskelan-wq/portland-reuse-hub
+
+---
+
+## ✨ Features
+
+### User Features
+- 🗺️ **Interactive Map** - Browse 50+ Portland locations on Leaflet map with custom markers
+- 🔍 **Smart Search** - Find locations by item type (electronics, furniture, clothing, etc.)
+- 📍 **Advanced Filters** - Sort by donation, repair, recycling, or disposal type
+- 📱 **Mobile Responsive** - Works great on phones, tablets, and desktop
+- 💾 **Favorites** - Save your go-to locations (localStorage)
+- 📊 **Category Chips** - Quick filter by popular item categories
+- 👥 **Submit Locations** - Community can suggest new places
+
+### Admin Features
+- 🔐 **JWT Authentication** - Secure admin login
+- ✅ **Approve/Reject** - Review community submissions
+- 📈 **Analytics Dashboard** - Track searches, popular items, and usage
+- 🗄️ **Database Management** - All data stored in PostgreSQL
+
+---
+
+## 🛠️ Tech Stack
+
+**Frontend:**
+- Vanilla JavaScript (ES6+)
+- Leaflet.js for interactive maps with custom markers
+- Responsive CSS with mobile-first design
+- LocalStorage for favorites and client-side caching
+
+**Backend:**
+- Node.js & Express.js
+- PostgreSQL database
+- Prisma ORM for type-safe database queries
+- JWT authentication with bcrypt password hashing
+- RESTful API design
+
+**DevOps:**
+- Railway/Render for deployment
+- GitHub for version control
+- Nodemon for development
+
+---
+
+## 🚀 Local Development Setup
+
+### Prerequisites
+- Node.js 18+ ([Download](https://nodejs.org/))
+- PostgreSQL 14+ ([Download](https://postgresapp.com/) for Mac)
+- Git
+
+### Installation
+
+**1. Clone the repository:**
+```bash
